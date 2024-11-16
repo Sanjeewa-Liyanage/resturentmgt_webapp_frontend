@@ -3,6 +3,8 @@ import Header from "./components/header/header";
 import HomePage from "./pages/homepage";
 import AdminPage from "./pages-admin/admin";
 import NotFound from "./components/NotFound";
+import TestComponent from "./components/test/test";
+import Login from "./pages/login/login";
 
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
          <Route path="/" element={<HomePage/>} />
          <Route path="/admin/*" element={<AdminPage/>} />
          <Route path = "*" element={<NotFound />} />
+         {/* <Route path = "/test" element ={<TestComponent />} /> */}
+         <Route path = "/login" element={<Login/>} />
 
         </Routes>
     
