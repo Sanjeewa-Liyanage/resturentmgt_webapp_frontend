@@ -7,9 +7,13 @@ import AdminRooms from "./adminrooms/adminrooms";
 import AdminUsers from "./uses/adminusers";
 import AdminFeedbacks from "./adminfeedbacks/adminfeedbacks";
 import AdminGallery from "./admin gallery/admingallery";
+import Category from "../pages/categories/category";
 
 export default function AdminPage() {
+  const token = localStorage.getItem("token");
+  console.log("Token:", token);
   return (
+   
     <>
       <div className="w-full max-h-[100vh] overflow-hidden flex">
         {/* Sidebar */}
@@ -69,7 +73,7 @@ export default function AdminPage() {
           <Routes path="/">
             
             <Route path="/bookings" element={<AdminBooking />} />
-            <Route path="/categories" element={<AdminCategories />} />
+            <Route path="/categories" element={<Category />} />
             <Route path="/rooms" element={<AdminRooms />} />
             <Route path="/users" element={<AdminUsers />} />
             <Route path="/feedbacks" element={<AdminFeedbacks />} />
