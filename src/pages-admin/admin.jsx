@@ -14,6 +14,7 @@ import AdminUsers from "./uses/adminusers";
 import AdminFeedbacks from "./adminfeedbacks/adminfeedbacks";
 import AdminGallery from "./admin gallery/admingallery";
 import AddCategory from "./addcategory/addcategory";
+import AddRoom from "./adminrooms/addroom/addroom";
 
 import UserTags from "../components/userdata/userdatasmall";
 
@@ -106,6 +107,7 @@ export default function AdminPage() {
           <Route path="/categories" element={<AdminCategories />} />
           <Route path="/categories/add-category" element={<AddCategory />} />
           <Route path="/rooms" element={<AdminRooms />} />
+          <Route path="/rooms/add-room" element={<AddRoom />} />
           <Route path="/users" element={<AdminUsers />} />
           <Route path="/feedbacks" element={<AdminFeedbacks />} />
           <Route path="/gallery-items" element={<AdminGallery />} />

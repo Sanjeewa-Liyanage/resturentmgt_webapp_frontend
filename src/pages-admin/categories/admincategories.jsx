@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Category = () => {
   const [categories, setCategories] = useState([]);
   const [categoriesIsLoaded, setCategoriesIsLoaded] = useState(false);
-const naivgate = useNavigate();
+  const naivgate = useNavigate();
 
   useEffect(() => {
     if (!categoriesIsLoaded) {
@@ -106,7 +106,7 @@ const naivgate = useNavigate();
                   <FaTrash />
                 </button>
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                  className="bg-[#7E5BEF] hover:bg-[#6840ef] text-white font-bold py-2 px-4 rounded-full"
                   title="Edit"
                 >
                   <FaEdit />

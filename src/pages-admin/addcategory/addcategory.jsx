@@ -41,7 +41,7 @@ export default function AddCategory() {
         price: parseFloat(price),
         features: featureArray,
         description,
-        image: url, // Save the image URL
+        image: url, 
       };
       axios.post(import.meta.env.VITE_BACKEND_URL + "/api/category", newCategory, {
         headers: {
@@ -53,8 +53,7 @@ export default function AddCategory() {
         setloading(false);
         toast.success("Category Created successfully");
       })
-    //   console.log("Submitted Category:", newCategory);
-    //   alert("Category details logged. Please proceed with backend development manually!");
+    
     } catch (error) {
       console.error("Error handling form submission:", error);
       alert("An error occurred while uploading the image.");

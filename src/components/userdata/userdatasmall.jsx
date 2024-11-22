@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 
 function UserTags(props) {
+  const[image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [userFound, setUserFound] = useState(false);
 
@@ -19,7 +20,11 @@ function UserTags(props) {
         })
         .then((res) => {
           setName(`${res.data.user.firstname} ${res.data.user.lastname}`);
+          setImage(res.data.user.image);
+          console.log("User data:", res.data.user.image);
+          console.log("User data:", res.data.user);
           setUserFound(true);
+          
         })
         .catch((err) => {
           console.error("Error fetching user data:", err);
@@ -34,7 +39,7 @@ function UserTags(props) {
       {/* User Image */}
       <img
         className="rounded-full w-10 h-10 border-2 border-white object-cover shadow-md"
-        src={props.image}
+        src={image}
         alt="User Avatar"
       />
 
