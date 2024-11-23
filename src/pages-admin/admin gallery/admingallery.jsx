@@ -4,7 +4,7 @@ import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules"; // Update this line
 import "swiper/swiper-bundle.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function AdminGallery() {
     const [gallery, setGallery] = useState([]);
@@ -93,12 +93,13 @@ export default function AdminGallery() {
                             </h2>
                             <p className="text-gray-600 mt-2">{item.description}</p>
                             <div className="mt-4 flex justify-end gap-3">
-                                <button
+                                <Link
                                     className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-                                    onClick={() => navigate(`/edit-gallery/${item._id}`)}
+                                    to={"update-gallery/"}
+                                    state={item}
                                 >
                                     <FaEdit />
-                                </button>
+                                </Link>
                                 <button
                                     className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                                     onClick={() => handleDelete(item._id)}

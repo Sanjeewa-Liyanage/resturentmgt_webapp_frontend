@@ -2,10 +2,17 @@ import React, { useState } from "react";
 import uploadimg from "../../../utils/imgupload";
 import { getDownloadURL } from "firebase/storage";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation ,useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
+
 
 export default function UpdateCategory() {
     const location = useLocation();
+    const navigate = useNavigate();
+    if(location.state == null){
+        window.location.href = "/admin/categories";
+    }
   const [name, setname] = useState(location.state.name);
   const [price, setprice] = useState(location.state.price);
   const [features, setfeatures] = useState(location.state.features.join(", "));
@@ -28,10 +35,30 @@ export default function UpdateCategory() {
     setloading(true);
     e.preventDefault();
 
-    if (!image) {
-      alert("Please upload an image");
-      return;
-    }
+    if (image==null) {
+        try{
+        const newCategory = {
+            
+            price: parseFloat(price),
+            features: features,
+            description,
+            image: location.state.image, 
+          };
+          axios.put(import.meta.env.VITE_BACKEND_URL + "/api/category/"+name, newCategory, {
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          }).then((res) => {
+            console.log(res.data);
+            setloading(false);
+            toast.success("Category Updated successfully");
+          })
+        }catch (error) {
+            console.error("Error handling form submission:", error);
+            alert("An error occurred while uploading the image.");
+        }
+    }else{
 
     try {
       // Upload image to Firebase
@@ -41,13 +68,13 @@ export default function UpdateCategory() {
 
       const featureArray = features.split(",").map((f) => f.trim());
       const newCategory = {
-        name: name,
+        
         price: parseFloat(price),
         features: featureArray,
         description,
         image: url, 
       };
-      axios.post(import.meta.env.VITE_BACKEND_URL + "/api/category", newCategory, {
+      axios.put(import.meta.env.VITE_BACKEND_URL + "/api/category/"+name, newCategory, {
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -55,13 +82,14 @@ export default function UpdateCategory() {
       }).then((res) => {
         console.log(res.data);
         setloading(false);
-        toast.success("Category Created successfully");
+       toast.success("Category Updated successfully");
       })
     
     } catch (error) {
       console.error("Error handling form submission:", error);
       alert("An error occurred while uploading the image.");
     }
+}
   };
 
   return (
@@ -80,6 +108,7 @@ export default function UpdateCategory() {
             className="w-full border border-gray-300 p-2 rounded"
             placeholder="Enter category name"
             required
+            disabled
           />
         </div>
         <div className="mb-4">
