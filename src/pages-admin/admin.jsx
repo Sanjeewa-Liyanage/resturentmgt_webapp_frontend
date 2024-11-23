@@ -12,11 +12,13 @@ import AdminCategories from "./categories/admincategories";
 import AdminRooms from "./adminrooms/adminrooms";
 import AdminUsers from "./uses/adminusers";
 import AdminFeedbacks from "./adminfeedbacks/adminfeedbacks";
-import AdminGallery from "./admin gallery/admingallery";
-import AddCategory from "./addcategory/addcategory";
-import AddRoom from "./adminrooms/addroom/addroom";
 
+import AddCategory from "./addcategory/addcategory";
+import UpdateCategory from "./categories/updatecategory/updatecategory";
+import AddRoom from "./adminrooms/addroom/addroom";
+import AdminGallery from "./admin gallery/admingallery";
 import UserTags from "../components/userdata/userdatasmall";
+import AddGallery from "./admin gallery/add gallery/addgallery";
 
 export default function AdminPage() {
   const token = localStorage.getItem("token");
@@ -111,6 +113,8 @@ export default function AdminPage() {
           <Route path="/users" element={<AdminUsers />} />
           <Route path="/feedbacks" element={<AdminFeedbacks />} />
           <Route path="/gallery-items" element={<AdminGallery />} />
+          <Route path="/gallery-items/add-gallery" element={<AddGallery />} />
+          <Route path="/update-category/" element={<UpdateCategory />} />
         </Routes>
       </div>
     </div>

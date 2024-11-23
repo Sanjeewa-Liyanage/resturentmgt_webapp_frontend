@@ -25,6 +25,7 @@ function App() {
          {/* <Route path="/categories" element={<Category/>}/> */}
          <Route path="/rooms" element={<AdminRooms/>}/>
          <Route path="/addrooms" element={<AddRoom/>}/>
+         {/* <Route path = "/gallery" element={<AdminGallery/>}/> */}
 
         </Routes>
     

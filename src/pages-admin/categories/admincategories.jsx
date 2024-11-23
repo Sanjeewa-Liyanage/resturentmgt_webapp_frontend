@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 const Category = () => {
   const [categories, setCategories] = useState([]);
   const [categoriesIsLoaded, setCategoriesIsLoaded] = useState(false);
@@ -105,12 +106,14 @@ const Category = () => {
                 >
                   <FaTrash />
                 </button>
-                <button
+                <Link
                   className="bg-[#7E5BEF] hover:bg-[#6840ef] text-white font-bold py-2 px-4 rounded-full"
                   title="Edit"
+                  to={"/admin/update-category/"}
+                  state={ category }
                 >
                   <FaEdit />
-                </button>
+                </Link>
               </td>
             </tr>
           ))}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import { FaPlus, FaTrash, FaEdit, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
@@ -8,6 +8,7 @@ export default function AdminRooms() {
     const [rooms, setRooms] = useState([]);
     const [roomsIsLoaded, setRoomsIsLoaded] = useState(false);
     const navigate = useNavigate();
+    const [selectedImage, setSelectedImage] = useState(null);  
 
     useEffect(() => {
         if (!roomsIsLoaded) {
@@ -23,6 +24,35 @@ export default function AdminRooms() {
                 });
         }
     }, [roomsIsLoaded]);
+
+    function DeleteItem(roomId){
+        const token = localStorage.getItem("token");
+        console.log("Token:", token);
+        if(!token){
+            alert("You must be logged in to delete a room");
+            window.location.href = "/login";
+        }
+        if(window.confirm("Are you sure you want to delete this room?")){
+            axios.delete(import.meta.env.VITE_BACKEND_URL + "/api/rooms/" + roomId, {
+                headers: {
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+                alert("Room deleted successfully");
+                setRoomsIsLoaded(false);
+            })
+            .catch((err) => {
+                console.error("Delete room error:", err);
+                alert("Failed to delete room");
+            });
+        }
+    }
+
+
+
 
     const toggleAvailability = (roomId) => {
         const currentRoom = rooms.find((room) => room.roomId === roomId);
@@ -71,6 +101,14 @@ export default function AdminRooms() {
         navigate("add-room");
     }
 
+    function openImageModal(image) {
+        setSelectedImage(image);
+    }
+
+    function closeImageModal() {
+        setSelectedImage(null);
+    }
+
     return (
         <div className="container mx-auto mt-10 p-5">
             <button
@@ -100,7 +138,7 @@ export default function AdminRooms() {
                         <tr key={index}>
                             <td className="border border-gray-300">{room.roomId}</td>
                             <td className="border border-gray-300">{room.category}</td>
-                            <td className="border border-gray-300">{room.maxGuests}</td>
+                            <td className="border border-gray-300">{room.maxGuest}</td>
                             <td className="border border-gray-300 text-center">
                                 <button
                                     onClick={() => toggleAvailability(room.roomId)}
@@ -123,6 +161,7 @@ export default function AdminRooms() {
                                             src={photo}
                                             alt={`Room ${room.roomId} - ${photoIndex}`}
                                             className="w-16 h-16 object-cover justify-center items-center"
+                                            onClick={() => openImageModal(photo)}
                                         />
                                     ))}
                             </td>
@@ -133,6 +172,7 @@ export default function AdminRooms() {
                                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full items-center justify-center"
                                     onClick={() => {
                                         // Delete handler
+                                        DeleteItem(room.roomId);
                                     }}
                                     title="Delete"
                                 >
@@ -149,6 +189,29 @@ export default function AdminRooms() {
                     ))}
                 </tbody>
             </table>
+            {selectedImage && (
+                 <div
+                 className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+                 onClick={closeImageModal}
+             >
+                 <div
+                     className="relative bg-[#00000000] p-4 rounded-lg shadow-lg"
+                     onClick={(e) => e.stopPropagation()} 
+                 >
+                     <img
+                         src={selectedImage}
+                         alt="Large view"
+                         className="w-[800px] h-[400px] "
+                     />
+                     <button
+                         className="absolute top-2 right-2 text-white w-[20px] h-[20px] p-2 rounded-full"
+                         onClick={closeImageModal}
+                     >
+                         <FaTimes className="h-5 w-5 "/>
+                     </button>
+                 </div>
+             </div>
+            )}
         </div>
     );
 }
