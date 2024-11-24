@@ -1,5 +1,9 @@
 .pic-bg{
+<<<<<<< HEAD
     background-image: url('cover.jpg');
+=======
+    background-image: url('coverpg.png');
+>>>>>>> 854afbff4badedb90c16a952f82b75e30af4ff8c
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
