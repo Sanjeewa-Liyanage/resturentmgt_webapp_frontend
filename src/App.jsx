@@ -10,6 +10,7 @@ import Category from "./pages/categories/category";
 import AdminRooms from "./pages-admin/adminrooms/adminrooms";
 import AddRoom from "./pages-admin/adminrooms/addroom/addroom";
 import { Toaster } from "react-hot-toast";
+import { UpdateRoom } from "./pages-admin/adminrooms/updateroom/updateroom";
 
 function App() {
   return (
@@ -23,9 +24,7 @@ function App() {
          <Route path = "/login" element={<Login />} />
          <Route path ="/register" element={<Register />}/>
          {/* <Route path="/categories" element={<Category/>}/> */}
-         <Route path="/rooms" element={<AdminRooms/>}/>
-         <Route path="/addrooms" element={<AddRoom/>}/>
-        
+         
 
         </Routes>
     

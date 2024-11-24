@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { FaPlus, FaTrash, FaEdit, FaTimes } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
@@ -178,13 +178,15 @@ export default function AdminRooms() {
                                 >
                                     <FaTrash />
                                 </button>
-                                <button
+                                <Link
                                     className="bg-[#7E5BEF] hover:bg-[#6840ef] text-white font-bold py-2 px-4 rounded-full"
                                     title="Edit"
+                                    to={"update-room/"}
+                                    state={room}
                                 >
                                     <FaEdit />
-                                </button>
-                            </td>
+                                </Link>
+                                                            </td>
                         </tr>
                     ))}
                 </tbody>

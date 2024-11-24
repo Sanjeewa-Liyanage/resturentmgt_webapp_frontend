@@ -20,6 +20,7 @@ import AdminGallery from "./admin gallery/admingallery";
 import UserTags from "../components/userdata/userdatasmall";
 import AddGallery from "./admin gallery/add gallery/addgallery";
 import UpdateGallery from "./admin gallery/updategallery/updategallery";
+import { UpdateRoom } from "./adminrooms/updateroom/updateroom";
 
 export default function AdminPage() {
   const token = localStorage.getItem("token");
@@ -116,6 +117,7 @@ export default function AdminPage() {
           <Route path="/gallery-items" element={<AdminGallery />} />
           <Route path="/gallery-items/add-gallery" element={<AddGallery />} />
           <Route path="gallery-items/update-gallery/" element={ <UpdateGallery/>} />
+          <Route path="rooms/update-room/" element={<UpdateRoom />} />
           <Route path="/update-category/" element={<UpdateCategory />} />
         </Routes>
       </div>
