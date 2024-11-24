@@ -1,8 +1,7 @@
-.pic-bg{
-    background-image: url('back2.jpg');
+.pic-bg {
+    background-image: url('/back2.jpg'); /* Note the leading slash */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
-    
 }
