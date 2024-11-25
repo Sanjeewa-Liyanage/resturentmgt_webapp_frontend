@@ -1,53 +1,76 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-function UserTag(props){
-    const [name, setName] = useState("");
-    const [userFound, setUserFound] = useState(false);
+function UserTag() {
+  const [image, setImage] = useState(null);
+  const [name, setName] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-   
-    //use effect function
-    useEffect(
-        () => {
-            const token = localStorage.getItem("token");  
-        if(token != null){
-        console.log("Token:", token);
-        axios.get(import.meta.env.VITE_BACKEND_URL + "/api/users/", {
-            headers: {
-                Authorization: "Bearer " + token,
-                "Content-Type": "application/json"
-            }
+  useEffect(() => {
+    if (token) {
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/users/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         })
         .then((res) => {
-            console.log("User data:", res.data);
-            setName(res.data.user.firstname + " " + res.data.user.lastname);
-            setUserFound(true);
+          setName(`${res.data.user.firstname} ${res.data.user.lastname}`);
+          setImage(res.data.user.image);
+          console.log("User data:", res.data.user);
         })
         .catch((err) => {
-            console.error("User data error:", err);
+          console.error("Error fetching user data:", err);
         });
-        
-            
-    }else{
-        setName("guest");
+    } else {
+      setName("Guest");
     }
-        },[userFound
-            //dependencies array not sensitive to json objects
-        ]
-    )
+  }, [token]);
 
-   
-    return(
-        <div className="absolute right-0 flex  items-center cursor-pointer mr-2">
-            <img className="rounded-full w-[75px] h-[75px]" src={props.image} alt="Avatar" />
-            <span className="text-black ml-[5px] text-xl ">{name}</span>
-            <button className=""onClick={()=>{
-                localStorage.removeItem("token");
-                setUserFound(false);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+  };
 
-            }}>logout</button>
+  return (
+    <div className="flex items-center space-x-4 cursor-pointer ml-auto">
+      {/* User Image */}
+      {token && image ? (
+        <img
+          className="rounded-full w-10 h-10 border-2 border-white object-cover shadow-md"
+          src={image}
+          alt="User Avatar"
+        />
+      ) : (
+        <div className="rounded-full w-10 h-10 border-2 border-gray-300 bg-gray-100 flex items-center justify-center">
+          <span className="text-white">?</span>
         </div>
-    )
+      )}
+
+      {/* User Name */}
+      <span className="text-white text-lg font-medium">{name}</span>
+
+      {/* Login/Logout Button */}
+      {token ? (
+        <button
+          className="flex items-center justify-center text-red-500 hover:text-red-600 rounded-full shadow-lg"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      ) : (
+        <button
+          className="flex items-center justify-center text-blue-500 hover:text-blue-600 rounded-full shadow-lg"
+          onClick={() => {
+            window.location.href = "/login";
+          }}
+        >
+          Login
+        </button>
+      )}
+    </div>
+  );
 }
 
 export default UserTag;

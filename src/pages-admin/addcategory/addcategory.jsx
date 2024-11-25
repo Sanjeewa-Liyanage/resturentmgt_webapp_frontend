@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import uploadimg from "../../utils/imgupload";
+import uploadimg from "../../utils/imgupload";  // Assume this handles the image upload to Firebase
 import { getDownloadURL } from "firebase/storage";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ export default function AddCategory() {
   const [price, setprice] = useState(0);
   const [features, setfeatures] = useState("");
   const [description, setdescription] = useState("");
-  const [image, setimage] = useState(null);
+  const [images, setimages] = useState([]); // Store multiple images
   const [loading, setloading] = useState(false);
   const token = localStorage.getItem("token");
 
@@ -17,23 +17,28 @@ export default function AddCategory() {
   }
 
   const handleImageChange = (e) => {
-    setimage(e.target.files[0]); // Capture the selected file
+    setimages(Array.from(e.target.files)); // Convert FileList to array
   };
 
   const HandleSubmit = async (e) => {
     setloading(true);
     e.preventDefault();
 
-    if (!image) {
-      alert("Please upload an image");
+    if (images.length === 0) {
+      alert("Please upload at least one image");
+      setloading(false);
       return;
     }
 
     try {
-      // Upload image to Firebase
-      const snapshot = await uploadimg(image);
-      const url = await getDownloadURL(snapshot.ref);
-      console.log("Image URL:", url);
+      const imageUrls = [];  // Array to hold URLs of uploaded images
+
+      // Upload images one by one and collect their URLs
+      for (let i = 0; i < images.length; i++) {
+        const snapshot = await uploadimg(images[i]);  // uploadimg should return a snapshot
+        const url = await getDownloadURL(snapshot.ref);  // Get download URL from Firebase
+        imageUrls.push(url);  // Push URL into the array
+      }
 
       const featureArray = features.split(",").map((f) => f.trim());
       const newCategory = {
@@ -41,22 +46,25 @@ export default function AddCategory() {
         price: parseFloat(price),
         features: featureArray,
         description,
-        image: url, 
+        images: imageUrls,  // Send array of image URLs
       };
-      axios.post(import.meta.env.VITE_BACKEND_URL + "/api/category", newCategory, {
+
+      // Make the API request to create the new category
+      const response = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/category", newCategory, {
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
-      }).then((res) => {
-        console.log(res.data);
-        setloading(false);
-        toast.success("Category Created successfully");
-      })
-    
+      });
+
+      console.log(response.data);
+      setloading(false);
+      alert("Category added successfully!");
+
     } catch (error) {
       console.error("Error handling form submission:", error);
-      alert("An error occurred while uploading the image.");
+      setloading(false);
+      alert("An error occurred while uploading the images.");
     }
   };
 
@@ -121,27 +129,26 @@ export default function AddCategory() {
         </div>
         <div className="mb-4">
           <label htmlFor="image" className="block font-medium text-gray-700 mb-2">
-            Upload Image
+            Upload Images
           </label>
           <input
             type="file"
             id="image"
             accept="image/*"
             onChange={handleImageChange}
+            multiple
             className="w-full border border-gray-300 p-2 rounded"
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 flex justify-center "
-        >{
-            loading ? (
-                <div className="border-t-2 border-white w-[20px] min-h-[20px] rounded-full animate-spin"></div>
-            ) : (
-                <span>Add Category</span>
-            )
-        }
-          
+          className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 flex justify-center"
+        >
+          {loading ? (
+            <div className="border-t-2 border-white w-[20px] min-h-[20px] rounded-full animate-spin"></div>
+          ) : (
+            <span>Add Category</span>
+          )}
         </button>
       </form>
     </div>
