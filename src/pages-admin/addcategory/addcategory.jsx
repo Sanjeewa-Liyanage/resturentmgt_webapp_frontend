@@ -46,7 +46,7 @@ export default function AddCategory() {
         price: parseFloat(price),
         features: featureArray,
         description,
-        images: imageUrls,  // Send array of image URLs
+        image: imageUrls,  // Send array of image URLs
       };
 
       // Make the API request to create the new category

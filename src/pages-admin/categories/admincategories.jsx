@@ -77,33 +77,33 @@ const Category = () => {
             key={index}
             className="bg-white p-4 rounded-lg shadow-lg hover:shadow-2xl transition-all"
           >
-              {/* Swiper this line */}
-              <div className="w-full h-64">
-                            <Swiper
-                                modules={[Navigation, Pagination]}
-                                navigation
-                                pagination={{ clickable: true }}
-                                spaceBetween={10}
-                                slidesPerView={1}
-                                className="h-full"
-                            >
-                                {category.image.map((img, index) => (
-                                    <SwiperSlide key={index}>
-                                        <img
-                                            src={img}
-                                            alt={`${category.name} - ${index + 1}`}
-                                            className="w-full h-64 object-cover"
-                                        />
-                                    </SwiperSlide>
-                                ))}
-                            </Swiper>
-                        </div>
+            {/* Swiper to handle images */}
+            <div className="w-full h-64">
+              <Swiper
+                modules={[Navigation, Pagination]}
+                navigation
+                pagination={{ clickable: true }}
+                spaceBetween={10}
+                slidesPerView={1}
+                className="h-full"
+              >
+                {/* Ensure category.image is an array and exists before mapping */}
+                {Array.isArray(category.image) && category.image.length > 0 ? (
+                  category.image.map((img, index) => (
+                    <SwiperSlide key={index}>
+                      <img
+                        src={img}
+                        alt={`${category.name} - ${index + 1}`}
+                        className="w-full h-64 object-cover"
+                      />
+                    </SwiperSlide>
+                  ))
+                ) : (
+                  <div>No images available</div> // Fallback message if no images exist
+                )}
+              </Swiper>
+            </div>
 
-            {/* <img
-              src={category.image}
-              alt={category.name}
-              className="w-full h-40 object-cover rounded-lg"
-            /> */}
             <h3 className="text-xl font-semibold mt-4">{category.name}</h3>
             <p className="text-gray-600 mt-2">{category.description}</p>
             <p className="text-lg font-bold text-green-500 mt-2">
@@ -120,26 +120,25 @@ const Category = () => {
             </div>
 
             {/* Actions */}
-            <div className="mt-6 flex justify-start items-center space-x-4"> {/* Adjusted this line */}
-  <button
-    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-    onClick={() => {
-      DeleteItem(category.name);
-    }}
-    title="Delete"
-  >
-    <FaTrash />
-  </button>
-  <Link
-    className="bg-[#7E5BEF] hover:bg-[#6840ef] text-white font-bold py-2 px-4 rounded-full"
-    title="Edit"
-    to={"/admin/update-category/"}
-    state={category}
-  >
-    <FaEdit />
-  </Link>
-</div>
-
+            <div className="mt-6 flex justify-start items-center space-x-4">
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+                onClick={() => {
+                  DeleteItem(category.name);
+                }}
+                title="Delete"
+              >
+                <FaTrash />
+              </button>
+              <Link
+                className="bg-[#7E5BEF] hover:bg-[#6840ef] text-white font-bold py-2 px-4 rounded-full"
+                title="Edit"
+                to={"/admin/update-category/"}
+                state={category}
+              >
+                <FaEdit />
+              </Link>
+            </div>
           </div>
         ))}
       </div>

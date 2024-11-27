@@ -34,19 +34,22 @@ export default function UpdateCategory() {
   const HandleSubmit = async (e) => {
     setloading(true);
     e.preventDefault();
-
+  
     const uploadedImageUrls = [];
     const featureArray = features.split(",").map((f) => f.trim());
 
-    // Upload images to Firebase if new images are selected
+    // Check if images are uploaded or if we need to keep existing images
     if (images.length === 0) {
-      uploadedImageUrls.push(location.state.image); // Keep the original image if no new images
+      // Keep the original images if no new images are uploaded
+      if (location.state.image && location.state.image.length > 0) {
+        uploadedImageUrls.push(...location.state.image); // Use existing images
+      }
     } else {
       try {
         for (let i = 0; i < images.length; i++) {
           const snapshot = await uploadimg(images[i]);
           const url = await getDownloadURL(snapshot.ref);
-          uploadedImageUrls.push(url); // Push each image URL into the array
+          uploadedImageUrls.push(url);  // Add each uploaded image URL to the array
         }
       } catch (error) {
         console.error("Error uploading images:", error);
@@ -55,14 +58,16 @@ export default function UpdateCategory() {
         return;
       }
     }
-
+  
     try {
       const updatedCategory = {
         price: parseFloat(price),
         features: featureArray,
         description,
-        image: uploadedImageUrls,  // Send multiple image URLs as an array
+        image: uploadedImageUrls,  // Send multiple image URLs as an array (or previous ones if none uploaded)
       };
+
+      console.log("Updated Category Data:", updatedCategory);  // Log data being sent
 
       axios
         .put(import.meta.env.VITE_BACKEND_URL + "/api/category/" + name, updatedCategory, {
