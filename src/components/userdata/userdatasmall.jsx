@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 
-function UserTags(props) {
+function UserTags() {
   const[image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [userFound, setUserFound] = useState(false);
