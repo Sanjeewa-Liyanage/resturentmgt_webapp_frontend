@@ -14,7 +14,7 @@ function Header() {
           muted
           playsInline
         >
-          <source src="bg.mp4" type="video/mp4" />
+          <source src="https://storage.googleapis.com/weapp_sl/bg.mp4" type="video/mp4" />
           {/* Fallback Image if Video doesn't load */}
           <img src="back2.jpg" alt="Fallback Image" className="w-full h-full object-cover" />
         </video>
