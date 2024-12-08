@@ -135,7 +135,12 @@ export default function HomePage( ) {
           >
             {categories.map((category, index) => (
               <SwiperSlide key={index}>
+                <Link to={"/category/" + category.name}
+                title= "${category.name}"
+                state={category}>
+                  
                 <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105">
+
                   <div className="w-full h-64 mb-4">
                     <img
                       src={category.image[0]} // Use the first image for simplicity
@@ -152,6 +157,7 @@ export default function HomePage( ) {
                     Book Now
                   </button>
                 </div>
+                </Link>
               </SwiperSlide>
             ))}
           </Swiper>

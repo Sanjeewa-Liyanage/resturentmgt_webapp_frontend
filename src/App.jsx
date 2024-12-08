@@ -9,8 +9,10 @@ import Register from "./pages/register/register";
 import Category from "./pages/categories/category";
 import AdminRooms from "./pages-admin/adminrooms/adminrooms";
 import AddRoom from "./pages-admin/adminrooms/addroom/addroom";
+import CategoryDetails from "./pages/pages-client/categorydetails"
 import { Toaster } from "react-hot-toast";
 import { UpdateRoom } from "./pages-admin/adminrooms/updateroom/updateroom";
+import RoomDetails from "./pages/pages-client/roomdetails";
 
 function App() {
   return (
@@ -23,6 +25,10 @@ function App() {
          <Route path = "/test" element ={<TestComponent />} />
          <Route path = "/login" element={<Login />} />
          <Route path ="/register" element={<Register />}/>
+         
+         <Route path="/category/:id" element={<CategoryDetails />} />
+         <Route path="/rooms/:roomId" element = {<RoomDetails/>}/>
+
          {/* <Route path="/categories" element={<Category/>}/> */}
          
 
