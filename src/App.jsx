@@ -12,6 +12,7 @@ import AddRoom from "./pages-admin/adminrooms/addroom/addroom";
 import CategoryDetails from "./pages/pages-client/categorydetails"
 import { Toaster } from "react-hot-toast";
 import { UpdateRoom } from "./pages-admin/adminrooms/updateroom/updateroom";
+import RoomDetails from "./pages/pages-client/roomdetails";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
          <Route path ="/register" element={<Register />}/>
          
          <Route path="/category/:id" element={<CategoryDetails />} />
+         <Route path="/rooms/:roomId" element = {<RoomDetails/>}/>
 
          {/* <Route path="/categories" element={<Category/>}/> */}
          

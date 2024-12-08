@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
-
+import Header from "../../components/header/header";
+import Headermod from "../../components/header/headermod";
+import Footer from "../../components/footer/footer";
+import { Link } from "react-router-dom";
 export default function CategoryDetails() {
   const location = useLocation();
   const [name, setName] = useState(location.state?.name || ""); // Get category name from state
@@ -34,6 +37,7 @@ export default function CategoryDetails() {
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/rooms/availableRooms?category=${name}`)
       .then((res) => {
         setRooms(res.data.rooms);
+       
       })
       .catch((error) => {
         console.error("Error fetching rooms:", error);
@@ -58,6 +62,8 @@ export default function CategoryDetails() {
   }
 
   return (
+   <>
+   <Headermod />
     <div className="container mx-auto p-6">
       {/* Header with Category Name */}
       <h1 className="text-3xl font-bold text-center mb-6">{category.name}</h1>
@@ -140,10 +146,20 @@ export default function CategoryDetails() {
 
       {/* Available Rooms */}
       <div className="mt-8">
+        
         <h2 className="text-2xl font-bold mb-4">Available Rooms</h2>
         {rooms.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            
             {rooms.map((room) => (
+              <Link
+              to={"/rooms/" + room.roomId}
+            
+              title={"View All Rooms"}
+              state={room}
+              >
               <div key={room._id} className="border rounded-lg p-4 shadow">
                 <img
                   src={room.photos?.[0] || "/default-room.jpg"}
@@ -155,12 +171,16 @@ export default function CategoryDetails() {
                 <p className="text-gray-700">Max Guests: {room.maxGuest}</p>
                 <p className="text-green-500 font-semibold">Available</p>
               </div>
+              </Link>
             ))}
           </div>
+         
         ) : (
           <p className="text-gray-700">No rooms available for this category.</p>
         )}
       </div>
     </div>
+    <Footer/>
+    </>
   );
 }
