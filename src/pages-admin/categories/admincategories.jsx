@@ -130,10 +130,12 @@ const Category = () => {
               >
                 <FaTrash />
               </button>
+              
               <Link
                 className="bg-[#7E5BEF] hover:bg-[#6840ef] text-white font-bold py-2 px-4 rounded-full"
                 title="Edit"
                 to={"/admin/update-category/"}
+                // navigate(`/category/${category.name}`)
                 state={category}
               >
                 <FaEdit />
