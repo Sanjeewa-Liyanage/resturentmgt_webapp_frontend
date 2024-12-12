@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Headermod from "../../components/header/headermod";
 import Footer from "../../components/footer/footer";
+import { useUser } from "../../auth/user.context";
 
 export default function RoomDetails() {
   const location = useLocation();
@@ -13,8 +14,11 @@ export default function RoomDetails() {
  const [feedbacks, setFeedbacks] = useState([]); // Feedbacks for the room  
   const [reviews, setReviews] = useState([]); // Reviews for the room
   const [newComment, setNewComment] = useState(""); // New comment text
-  const [userName, setUserName] = useState(""); // User name for the comment
+   const {userName, setUserName} = useUser(); // User name from context
   const [isSubmitting, setIsSubmitting] = useState(false); // Submission status
+  const [rating, setRating] = useState(0); // Selected rating
+const [hoverRating, setHoverRating] = useState(0); // Hover effect for stars
+
 
 
   
@@ -65,6 +69,7 @@ export default function RoomDetails() {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/feedbacks/room/${roomId}`)
       .then((res) => {
+        console.log("Fetched reviews:", res.data);
         const feedbacks = res.data.feedbacks; // Adjust this if the key is different
         const transformedReviews = feedbacks.map((feedback) => ({
           feedbackId: feedback.feedbackId,
@@ -87,29 +92,54 @@ export default function RoomDetails() {
 
 
 
-  const handleSubmitReview = () => {
-    if (!newComment.trim() || !userName.trim()) {
-      alert("Please enter your name and comment.");
+  const handleSubmitReview = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please log in to leave a review.");
       return;
     }
-
+  
+    if (!newComment.trim() || !rating) {
+      alert("Please enter a comment and select a rating.");
+      return;
+    }
+  
     setIsSubmitting(true);
-
-    const newReview = {
-      feedbackId: reviews.length + 1,
-      user: userName,
-      roomId,
-      content: newComment,
-      rating: 4, // Assuming a static rating for simplicity
-      timeStamp: new Date(),
-      approved: true,
-    };
-
-    setReviews([...reviews, newReview]);
-    setNewComment("");
-    setUserName("");
-    setIsSubmitting(false);
+  
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/feedbacks`,
+        {
+          roomId, // Pass the room ID
+          content: newComment, // Review content
+          rating, // Selected rating
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+          },
+        }
+      );
+  
+      // Add the new review to the state
+      setReviews((prevReviews) => [
+        ...prevReviews,
+        
+      ]);
+  
+      // Reset the form
+      setNewComment("");
+      setRating(0);
+      alert("Your review has been submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      alert("Failed to submit the review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  
+  
 
   // Utility to render stars based on rating
   const renderStars = (rating) => {
@@ -205,11 +235,11 @@ export default function RoomDetails() {
         </div>
          {/* Review Summary */}
          <div className="border rounded-lg p-6 shadow mb-6 mt-6 w-[540px]">
-  <h2 className="text-2xl font-bold mb-4">Review Summary</h2>
-  <div className="flex items-center justify-between">
-    <div className="text-4xl font-bold text-yellow-500">{summary.averageRating}</div>
-    <div className="text-gray-700 text-lg">{summary.totalReviews} reviews</div>
-  </div>
+                <h2 className="text-2xl font-bold mb-4">Review Summary</h2>
+                <div className="flex items-center justify-between">
+                    <div className="text-4xl font-bold text-yellow-500">{summary.averageRating}</div>
+                    <div className="text-gray-700 text-lg">{summary.totalReviews} reviews</div>
+         </div>
   
   {/* Average Rating in Stars */}
   <div className="flex items-center mt-2 mb-4">
@@ -259,31 +289,62 @@ export default function RoomDetails() {
 
           {/* Add Review Form */}
           <div className="mt-6">
-            <h3 className="text-xl font-bold mb-2">Leave a Comment</h3>
-            <div className="flex flex-col gap-4">
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="border rounded-lg p-2"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
-              <textarea
-                placeholder="Your Comment"
-                className="border rounded-lg p-2"
-                rows={4}
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-              />
-              <button
-                onClick={handleSubmitReview}
-                className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Submitting..." : "Submit Review"}
-              </button>
-            </div>
-          </div>
+  <h3 className="text-xl font-bold mb-2">Leave a Comment</h3>
+  <div className="flex flex-col gap-4">
+    {/* Star Rating */}
+    <div className="flex items-center gap-2">
+      <p className="text-gray-700">Rate this room:</p>
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            onClick={() => setRating(star)}
+            onMouseOver={() => setHoverRating(star)}
+            onMouseOut={() => setHoverRating(0)}
+            className={`cursor-pointer text-2xl ${
+              hoverRating >= star || rating >= star ? "text-yellow-500" : "text-gray-300"
+            }`}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    </div>
+    {/* Display Selected Rating */}
+    {rating > 0 && (
+      <p className="text-sm text-gray-500">You rated: {rating} {rating > 1 ? "stars" : "star"}</p>
+    )}
+
+    {/* User Name Input */}
+    <input
+      disabled ={true}
+      type="text"
+      placeholder={userName}
+      className="border rounded-lg p-2"
+      value={userName}
+      onChange={(e) => setUserName(e.target.value)}
+    />
+
+    {/* Comment Textarea */}
+    <textarea
+      placeholder="Your Comment"
+      className="border rounded-lg p-2"
+      rows={4}
+      value={newComment}
+      onChange={(e) => setNewComment(e.target.value)}
+    />
+
+    {/* Submit Button */}
+    <button
+      onClick={handleSubmitReview}
+      className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+      disabled={isSubmitting || rating === 0}
+    >
+      {isSubmitting ? "Submitting..." : "Submit Review"}
+    </button>
+  </div>
+</div>
+
         </div>
       </div>
       <Footer />
