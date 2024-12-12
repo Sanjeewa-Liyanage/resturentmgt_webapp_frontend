@@ -13,9 +13,11 @@ import CategoryDetails from "./pages/pages-client/categorydetails"
 import { Toaster } from "react-hot-toast";
 import { UpdateRoom } from "./pages-admin/adminrooms/updateroom/updateroom";
 import RoomDetails from "./pages/pages-client/roomdetails";
+import { UserProvider } from "./auth/user.context";
 
 function App() {
   return (
+    <UserProvider>
     <BrowserRouter>
       <Toaster position="top-right" reverseOrder={false}/>
         <Routes path ="/">
@@ -35,6 +37,7 @@ function App() {
         </Routes>
     
     </BrowserRouter>
+    </UserProvider>
   );
 }
 
