@@ -9,29 +9,28 @@ const[password , setPassword] = useState("");
 
 
 function handleLogin() {
-    axios.post(import.meta.env.VITE_BACKEND_URL+"/api/users/login", {
+    axios
+      .post(import.meta.env.VITE_BACKEND_URL + "/api/users/login", {
         email: email,
         password: password,
-    })
-    .then((res) => {
+      })
+      .then((res) => {
         console.log(res.data);
         localStorage.setItem("token", res.data.token);
-
-        const userType = res.data.user.type; 
-        console.log("User type:", userType);
-
+        localStorage.setItem("user", JSON.stringify(res.data.user)); // Save user details
+  
+        const userType = res.data.user.type;
         if (userType === "admin") {
-            console.log("Redirecting to admin page...");
-            window.location.href = "/admin";
+          window.location.href = "/admin";
         } else {
-            console.log("Redirecting to home page...");
-            window.location.href = "/";
+          window.location.href = "/";
         }
-    })
-    .catch((err) => {
+      })
+      .catch((err) => {
         console.error("Login error:", err);
-    });
-}
+      });
+  }
+  
 
 
 
