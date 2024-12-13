@@ -247,23 +247,23 @@ const [hoverRating, setHoverRating] = useState(0); // Hover effect for stars
   </div>
   
   {/* Rating Breakdown by Star */}
-  <div className="mt-4">
-    {[5, 4, 3, 2, 1].map((star) => (
-      <div key={star} className="flex items-center mb-2">
-        <span className="text-gray-600">{star} star</span>
-        <div className="flex-grow mx-2 bg-gray-200 rounded">
-          <div
-            className="bg-yellow-500 rounded h-2"
-            style={{
-              width: `${(summary.ratingsCount[star - 1] / summary.totalReviews) * 100 || 0}%`,
-            }}
-          ></div>
+          <div className="mt-4">
+            {[5, 4, 3, 2, 1].map((star) => (
+              <div key={star} className="flex items-center mb-2">
+                <span className="text-gray-600">{star} star</span>
+                <div className="flex-grow mx-2 bg-gray-200 rounded">
+                  <div
+                    className="bg-yellow-500 rounded h-2"
+                    style={{
+                      width: `${(summary.ratingsCount[star - 1] / summary.totalReviews) * 100 || 0}%`,
+                    }}
+                  ></div>
+                </div>
+                <span className="text-gray-600">{summary.ratingsCount[star - 1]}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <span className="text-gray-600">{summary.ratingsCount[star - 1]}</span>
-      </div>
-    ))}
-  </div>
-</div>
 
 
         {/* Reviews Section */}
@@ -289,60 +289,60 @@ const [hoverRating, setHoverRating] = useState(0); // Hover effect for stars
 
           {/* Add Review Form */}
           <div className="mt-6">
-  <h3 className="text-xl font-bold mb-2">Leave a Comment</h3>
-  <div className="flex flex-col gap-4">
-    {/* Star Rating */}
-    <div className="flex items-center gap-2">
-      <p className="text-gray-700">Rate this room:</p>
-      <div className="flex">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <span
-            key={star}
-            onClick={() => setRating(star)}
-            onMouseOver={() => setHoverRating(star)}
-            onMouseOut={() => setHoverRating(0)}
-            className={`cursor-pointer text-2xl ${
-              hoverRating >= star || rating >= star ? "text-yellow-500" : "text-gray-300"
-            }`}
-          >
-            ★
-          </span>
-        ))}
+        <h3 className="text-xl font-bold mb-2">Leave a Comment</h3>
+        <div className="flex flex-col gap-4">
+          {/* Star Rating */}
+          <div className="flex items-center gap-2">
+            <p className="text-gray-700">Rate this room:</p>
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  onClick={() => setRating(star)}
+                  onMouseOver={() => setHoverRating(star)}
+                  onMouseOut={() => setHoverRating(0)}
+                  className={`cursor-pointer text-2xl ${
+                    hoverRating >= star || rating >= star ? "text-yellow-500" : "text-gray-300"
+                  }`}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+          </div>
+        {/* Display Selected Rating */}
+        {rating > 0 && (
+          <p className="text-sm text-gray-500">You rated: {rating} {rating > 1 ? "stars" : "star"}</p>
+        )}
+
+        {/* User Name Input */}
+        <input
+          disabled ={true}
+          type="text"
+          placeholder={userName}
+          className="border rounded-lg p-2"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+        />
+
+        {/* Comment Textarea */}
+        <textarea
+          placeholder="Your Comment"
+          className="border rounded-lg p-2"
+          rows={4}
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+        />
+
+        {/* Submit Button */}
+        <button
+          onClick={handleSubmitReview}
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+          disabled={isSubmitting || rating === 0}
+        >
+          {isSubmitting ? "Submitting..." : "Submit Review"}
+        </button>
       </div>
-    </div>
-    {/* Display Selected Rating */}
-    {rating > 0 && (
-      <p className="text-sm text-gray-500">You rated: {rating} {rating > 1 ? "stars" : "star"}</p>
-    )}
-
-    {/* User Name Input */}
-    <input
-      disabled ={true}
-      type="text"
-      placeholder={userName}
-      className="border rounded-lg p-2"
-      value={userName}
-      onChange={(e) => setUserName(e.target.value)}
-    />
-
-    {/* Comment Textarea */}
-    <textarea
-      placeholder="Your Comment"
-      className="border rounded-lg p-2"
-      rows={4}
-      value={newComment}
-      onChange={(e) => setNewComment(e.target.value)}
-    />
-
-    {/* Submit Button */}
-    <button
-      onClick={handleSubmitReview}
-      className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-      disabled={isSubmitting || rating === 0}
-    >
-      {isSubmitting ? "Submitting..." : "Submit Review"}
-    </button>
-  </div>
 </div>
 
         </div>

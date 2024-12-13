@@ -1,4 +1,4 @@
-import { Link, Routes, Route, useLocation } from "react-router-dom";
+import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import {
   CiBookmarkCheck,
   CiViewList,
@@ -13,6 +13,7 @@ import AdminRooms from "./adminrooms/adminrooms";
 import AdminUsers from "./uses/adminusers";
 import AdminFeedbacks from "./adminfeedbacks/adminfeedbacks";
 
+import { useEffect } from "react";
 import AddCategory from "./addcategory/addcategory";
 import UpdateCategory from "./categories/updatecategory/updatecategory";
 import AddRoom from "./adminrooms/addroom/addroom";
@@ -24,9 +25,18 @@ import { UpdateRoom } from "./adminrooms/updateroom/updateroom";
 
 export default function AdminPage() {
   const token = localStorage.getItem("token");
-  if (!token) {
-    window.location.href = "/login"; // Redirect to login if token is not found
-  }
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user")); // Retrieve and parse the user data
+    console.log("Token:", token);
+    console.log("User:", user);
+
+    if (!token || !user || user.type !== "admin") {
+      console.log("Access denied. Redirecting...");
+      navigate("/"); // Redirect non-admin users or unauthenticated users
+    }
+  }, [token, navigate]);
 
   const location = useLocation();
 
