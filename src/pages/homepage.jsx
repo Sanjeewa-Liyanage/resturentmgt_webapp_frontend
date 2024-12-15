@@ -11,6 +11,7 @@ import { FaDumbbell } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 import { FaAward, FaHotel, FaTrophy, FaMedal } from 'react-icons/fa';
 import Footer from "../components/footer/footer";
+import Skeleton from "react-loading-skeleton";
 
 export default function HomePage( ) {
   const [categories, setCategories] = useState([]);
@@ -118,7 +119,11 @@ export default function HomePage( ) {
     </section>
     <section className="py-16 px-6 bg-gray-100">
         <div className="max-w-8xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8">Rooms & Suites</h2>
+          {/* Add the missing closing div tag */}
+        
+          <h2 className="text-3xl font-bold mb-8">Rooms & Suites</h2>{
+
+          categories.length > 0?(
           <Swiper
             modules={[Navigation, Pagination]}
             navigation
@@ -161,6 +166,20 @@ export default function HomePage( ) {
               </SwiperSlide>
             ))}
           </Swiper>
+          ):(
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Skeleton Loader */}
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="border rounded-lg p-4 shadow">
+                <Skeleton height={160} width="100%" />
+                <Skeleton height={20} width="80%" className="mt-2" />
+                <Skeleton height={20} width="60%" className="mt-2" />
+                <Skeleton height={20} width="50%" className="mt-2" />
+              </div>
+            ))}
+        </div>
+        
+          )}
         </div>
 </section>
 
@@ -205,7 +224,9 @@ export default function HomePage( ) {
 <section className="py-16 px-6 bg-white">
   <div className="max-w-8xl mx-auto text-center">
     <h2 className="text-3xl font-bold mb-8">Events & Gallery</h2>
+    {gallery.length > 0 ?(
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      
       {gallery.map((item, index) => (
         <div
           key={index}
@@ -225,7 +246,19 @@ export default function HomePage( ) {
           </button>
         </div>
       ))}
+    </div>):(
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Skeleton Loader */}
+      {[...Array(3)].map((_, index) => (
+        <div key={index} className="border rounded-lg p-4 shadow">
+          <Skeleton height={160} width="100%" />
+          <Skeleton height={20} width="80%" className="mt-2" />
+          <Skeleton height={20} width="60%" className="mt-2" />
+          <Skeleton height={20} width="50%" className="mt-2" />
+        </div>
+      ))}
     </div>
+    )}
   </div>
 </section>
 

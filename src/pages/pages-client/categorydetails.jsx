@@ -5,6 +5,9 @@ import Header from "../../components/header/header";
 import Headermod from "../../components/header/headermod";
 import Footer from "../../components/footer/footer";
 import { Link } from "react-router-dom";
+import Loader2 from "../../components/loader/loader";
+import SkeletonPage from "../../components/Skeleton";
+import ErrorMessage from "../../components/err";
 export default function CategoryDetails() {
   const location = useLocation();
   const [name, setName] = useState(location.state?.name || ""); // Get category name from state
@@ -47,17 +50,13 @@ export default function CategoryDetails() {
 
   if (error) {
     return (
-      <div className="container mx-auto p-6">
-        <p className="text-red-500 text-center">{error}</p>
-      </div>
+     <ErrorMessage/>
     );
   }
 
   if (!category) {
     return (
-      <div className="container mx-auto p-6 text-center">
-        <p>Loading category details...</p>
-      </div>
+      <SkeletonPage />
     );
   }
 
@@ -175,7 +174,8 @@ export default function CategoryDetails() {
             ))}
           </div>
          
-        ) : (
+        ) :
+         (
           <p className="text-gray-700">No rooms available for this category.</p>
         )}
       </div>

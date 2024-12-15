@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import uploadimg from "../../../utils/imgupload";
-import { getDownloadURL } from "firebase/storage";
+import { MediaSupabase,supabase } from "../../../utils/imgupload2";
 import axios from "axios";
 
 export default function AddRoom() {
   const [roomId, setRoomId] = useState("");
   const [category, setCategory] = useState("");
   const [maxGuests, setMaxGuests] = useState("");
-  const [available, setAvailable] = useState(false); // Checkbox state
-  const [photos, setPhotos] = useState([]); // State for multiple images
+  const [available, setAvailable] = useState(false);
+  const [photos, setPhotos] = useState([]);
   const [specialDescription, setSpecialDescription] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,7 +18,7 @@ export default function AddRoom() {
   }
 
   const handlePhotoChange = (e) => {
-    setPhotos(e.target.files); // Capture multiple files
+    setPhotos(e.target.files);
   };
 
   const handleAddRoom = async (e) => {
@@ -33,24 +32,44 @@ export default function AddRoom() {
     }
 
     try {
-      // Upload images to Firebase and get their URLs
+      // Upload images to Supabase and get their URLs
       const imageUrls = [];
       for (let i = 0; i < photos.length; i++) {
-        const snapshot = await uploadimg(photos[i]);
-        const url = await getDownloadURL(snapshot.ref);
-        imageUrls.push(url);
+        const file = photos[i];
+        const { data: uploadData, error: uploadError } = await MediaSupabase(file);
+
+        if (uploadError) {
+          console.error("Upload failed:", uploadError);
+          continue;
+        }
+        console.log("Upload successful:", uploadData);
+
+        // Retrieve the public URL
+        const filePath = uploadData?.path || file.name;
+        const { data: publicUrlData, error: publicUrlError } = supabase.storage
+          .from("images")
+          .getPublicUrl(filePath);
+
+        if (publicUrlError) {
+          console.error("Error fetching public URL:", publicUrlError);
+          continue;
+        }
+        console.log("Public URL:", publicUrlData?.publicUrl);
+        imageUrls.push(publicUrlData?.publicUrl);
       }
 
+      // Prepare room data
       const newRoom = {
         roomId,
         category,
         maxGuests: parseInt(maxGuests),
         available,
-        photos: imageUrls, // Store an array of image URLs
+        photos: imageUrls, // Array of image URLs
         specialDescription,
         notes,
       };
 
+      // Save room details to the backend
       const response = await axios.post(
         import.meta.env.VITE_BACKEND_URL + "/api/rooms",
         newRoom,
@@ -140,7 +159,7 @@ export default function AddRoom() {
             accept="image/*"
             onChange={handlePhotoChange}
             className="w-full border border-gray-300 p-2 rounded"
-            multiple // Allow selecting multiple files
+            multiple
           />
         </div>
         <div className="mb-4">
