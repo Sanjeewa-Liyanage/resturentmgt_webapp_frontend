@@ -4,6 +4,8 @@ import axios from "axios";
 import Headermod from "../../components/header/headermod";
 import Footer from "../../components/footer/footer";
 import { useUser } from "../../auth/user.context";
+import Loader from "../../components/loader/loader";
+import SkeletonPage from "../../components/Skeleton";
 
 export default function RoomDetails() {
   const location = useLocation();
@@ -182,9 +184,7 @@ const [hoverRating, setHoverRating] = useState(0); // Hover effect for stars
 
   if (!room) {
     return (
-      <div className="container mx-auto p-6 text-center">
-        <p>Loading room details...</p>
-      </div>
+      <SkeletonPage/>
     );
   }
 

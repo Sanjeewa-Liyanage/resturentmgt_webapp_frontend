@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules"; // Update this line
 import "swiper/swiper-bundle.css";
+import Loader2 from "../../components/loader/loader";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
@@ -55,6 +56,10 @@ const Category = () => {
   function HandlePlus() {
     console.log("Plus button clicked");
     navigate("add-category");
+  }
+
+  if (!categoriesIsLoaded) {
+    return <Loader2 />;
   }
 
   return (
