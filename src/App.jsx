@@ -14,7 +14,8 @@ import { Toaster } from "react-hot-toast";
 import { UpdateRoom } from "./pages-admin/adminrooms/updateroom/updateroom";
 import RoomDetails from "./pages/pages-client/roomdetails";
 import { UserProvider } from "./auth/user.context";
-import { UploadImgC } from "./components/test/test2";
+import BookingSearch from "./components/test/test2";
+
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
          <Route path="/" element={<HomePage/>} />
          <Route path="/admin/*" element={<AdminPage/>} />
          <Route path = "*" element={<NotFound />} />
-         <Route path = "/test" element ={<UploadImgC />} />
+         <Route path = "/test" element ={<BookingSearch/>} />
          <Route path = "/login" element={<Login />} />
          <Route path ="/register" element={<Register />}/>
          

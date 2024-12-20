@@ -22,6 +22,7 @@ import UserTags from "../components/userdata/userdatasmall";
 import AddGallery from "./admin gallery/add gallery/addgallery";
 import UpdateGallery from "./admin gallery/updategallery/updategallery";
 import { UpdateRoom } from "./adminrooms/updateroom/updateroom";
+import Dashboard from "./dashboard/dashboard";
 
 export default function AdminPage() {
   const token = localStorage.getItem("token");
@@ -53,6 +54,14 @@ export default function AdminPage() {
     <div className="flex h-screen ">
       {/* Sidebar */}
       <div className="w-[20%] bg-[#334E68] h-screen flex flex-col p-4 space-y-4 text-[#F9FAFB] rounded-tr-[2rem] rounded-br-[2rem]">
+        <Link
+        to={"/admin/dashboard"}
+          className="text-[20px] hover:font-bold flex items-center space-x-2 p-2 rounded hover:bg-[#7E5BEF]"
+        >
+          <CiBookmarkCheck />
+          <span>Dashboard</span>
+        </Link>
+
         <Link
           to="/admin/bookings"
           className="text-[20px] hover:font-bold flex items-center space-x-2 p-2 rounded hover:bg-[#7E5BEF]"
@@ -129,6 +138,8 @@ export default function AdminPage() {
           <Route path="gallery-items/update-gallery/" element={ <UpdateGallery/>} />
           <Route path="rooms/update-room/" element={<UpdateRoom />} />
           <Route path="/update-category/" element={<UpdateCategory />} />
+          <Route path="/dashboard" element={<Dashboard/>} />
+          
         </Routes>
       </div>
     </div>

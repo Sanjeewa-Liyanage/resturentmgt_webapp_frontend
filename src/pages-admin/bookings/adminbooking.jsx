@@ -14,6 +14,9 @@ export default function AdminBooking() {
   const [loading, setLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState(""); // Single search bar state
+    const [results, setResults] = useState([]);
+    const [error, setError] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -115,6 +118,46 @@ export default function AdminBooking() {
         setLoading(false);
       })
     })
+    const handleChange = (e) => {
+      const value = e.target.value;
+      setSearchQuery(value);
+
+      if(value.trim()===""){
+        setResults([]);
+        setError("");
+      }
+      
+    };
+    const handleKeyDown =(event) => {
+      if(event.key === "Enter"){
+        handleSearch();
+    }
+  };
+
+    const handleSearch = async (event) => {
+      if (event) event.preventDefault();
+    
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/bookings/search?query=${encodeURIComponent(searchQuery)}`);
+        const data = await response.json();
+    
+        if (response.ok) {
+          console.log("data", data);
+          setResults(data.bookings || []);
+          setError("");
+        } else {
+          setResults([]);
+          setError(data.message || "Error fetching results.");
+        }
+      } catch (err) {
+        setResults([]);
+        setError("An error occurred while fetching results.");
+        console.error(err);
+      }
+      
+    };
+
+    
   
     return (
       <div className="w-full p-4">
@@ -129,11 +172,14 @@ export default function AdminBooking() {
     {/* Centered search bar and button */}
     <div className="flex-1 flex justify-center items-center space-x-4">
       <input 
+      onChange={handleChange}
         type="text" 
         className="w-64 h-10 px-4 rounded-full bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-300 ease-in-out"
         placeholder="Search bookings..."
+        onKeyDown={handleKeyDown}
       />
-      <button className="px-6 py-2 rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none transition duration-200 ease-in-out">
+      <button className="px-6 py-2 rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none transition duration-200 ease-in-out"
+      onClick={handleSearch}>
         <FaSearch />
       </button>
     </div>
@@ -143,9 +189,46 @@ export default function AdminBooking() {
       Delete Ended Bookings <FaTrash className="ml-3"/>
     </button>
   </div>
-
-
-        <h2 className="text-2xl font-bold mb-4">Pending Bookings</h2>
+      {/* Conditionally Render Search Results Table */}
+    {searchQuery && results.length > 0 ? (
+      <div className="items-center justify-center h-[80vh]">
+        <h2 className="text-2xl font-bold mb-4">Search Results</h2>
+        <table className="w-full border-collapse border border-gray-300">
+          <thead className="bg-blue-400 text-white">
+            <tr>
+              <th className="border border-gray-300 p-2">Booking ID</th>
+              <th className="border border-gray-300 p-2">Room ID</th>
+              <th className="border border-gray-300 p-2">Category</th>
+              <th className="border border-gray-300 p-2">Email</th>
+              <th className="border border-gray-300 p-2">Status</th>
+              <th className="border border-gray-300 p-2">Reason</th>
+              <th className="border border-gray-300 p-2">Start Date</th>
+              <th className="border border-gray-300 p-2">End Date</th>
+              <th className="border border-gray-300 p-2">Notes</th>
+              <th className="border border-gray-300 p-2">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((booking) => (
+              <tr key={booking.bookingId} className="hover:bg-gray-100">
+                <td className="border border-gray-300 p-2 text-center">{booking.bookingId}</td>
+                <td className="border border-gray-300 p-2 text-center">{booking.roomId}</td>
+                <td className="border border-gray-300 p-2">{booking.category}</td>
+                <td className="border border-gray-300 p-2">{booking.email}</td>
+                <td className="border border-gray-300 p-2 text-center">{booking.status}</td>
+                <td className="border border-gray-300 p-2">{booking.reason || "no specific data"}</td>
+                <td className="border border-gray-300 p-2 text-center">{booking.start}</td>
+                <td className="border border-gray-300 p-2 text-center">{booking.end}</td>
+                <td className="border border-gray-300 p-2">{booking.notes || "no specific data"}</td>
+                <td className="border border-gray-300 p-2 text-center">{booking.timeStamp}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ):(
+      <>
+      <h2 className="text-2xl font-bold mb-4">Pending Bookings</h2>
         <table className="w-full border-collapse border border-gray-300">
           <thead className="bg-blue-400 text-white">
             <tr>
@@ -247,6 +330,8 @@ export default function AdminBooking() {
             ))}
           </tbody>
         </table>
+      </>
+    )}
       </div>
     );
 }
